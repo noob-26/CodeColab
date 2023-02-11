@@ -4,9 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-export default function SelectSmall({options, prompt}) {
-  const [value, setValue] = React.useState("");
-
+export default function SelectSmall({options, prompt, value, setValue}) {
   const handleChange = (event) => {
     setValue(event.target.value);
   };
@@ -21,15 +19,8 @@ export default function SelectSmall({options, prompt}) {
         label={prompt}
         onChange={handleChange}
       >
-        <MenuItem value="">
-          <em></em>
-        </MenuItem>
-        {/* <MenuItem value={10}>Ten</MenuItem>
-        <MenuItem value={20}>Twenty</MenuItem>
-        <MenuItem value={30}>Thirty</MenuItem> */}
-
         {options.map((ele) => (
-          <MenuItem value={ele}>{ele.toString()}</MenuItem>
+          <MenuItem value={ele} key={ele}>{ele.toString()}</MenuItem>
         ))}
       </Select>
     </FormControl>
