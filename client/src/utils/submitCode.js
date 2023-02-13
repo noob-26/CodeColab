@@ -1,8 +1,24 @@
-const submitCode = (code, input, setOutput) => {
-    const client_ID = import.meta.env.VITE_CLIENT_ID;
-    const client_secret = import.meta.env.VITE_CLIENT_SECRET;
+import axios from "axios";
 
-    console.log("yee", code, input, client_ID, client_secret);
-}
+const submitCode = (code, input, language) => {
+  const client_ID = import.meta.env.VITE_CLIENT_ID;
+  const client_secret = import.meta.env.VITE_CLIENT_SECRET;
+  const url = `${import.meta.env.VITE_SERVER_URL}proxy-api`;
+
+  const postData = {
+    clientId: client_ID,
+    clientSecret: client_secret,
+    script: code,
+    stdin: input,
+    language,
+    versionIndex: 0,
+  };
+
+   return axios.post(url, postData, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
 
 export default submitCode;

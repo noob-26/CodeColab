@@ -46,10 +46,11 @@ const Editor = ({height, theme, language, fontSize, code, setCode, placeholder})
       <AceEditor
         width="100%"
         height={height}
+        value={code}
         placeholder={placeholder}
-        mode={(language == 'c' || language == 'cpp') ? 'c_cpp' : language}
+        mode={(language == 'c' || language == 'cpp17') ? 'c_cpp' : (language == "python3") ? "python" : language}
         theme={theme}
-        name="blah2"
+        name="Editor"
         onChange={onChange}
         fontSize={fontSize}
         showPrintMargin={true}

@@ -1,12 +1,8 @@
 const languages = [
-  "javascript",
   "java",
-  "python",
-  "markdown",
-  "html",
+  "python3",
   "c",
-  "cpp",
-  "css",
+  "cpp17",
 ];
 
 export default languages;
