@@ -1,16 +1,7 @@
 const express = require("express");
-const cors = require("cors");
 const axios = require("axios");
-const app = express();
 
-const PORT = 5000;
-
-app.use(
-  cors({
-    origin: "*",
-  })
-);
-app.use(express.json());
+const router = express.Router();
 
 const url = `https://api.jdoodle.com/v1/execute`;
 
@@ -40,8 +31,9 @@ const submitCode = async (
   return data;
 };
 
-app.post("/proxy-api", async (req, res) => {
-  const {clientId, clientSecret, script, stdin, language, versionIndex} = req.body;
+router.post("/proxy-api", async (req, res) => {
+  const {clientId, clientSecret, script, stdin, language, versionIndex} =
+    req.body;
   const data = await submitCode(
     clientId,
     clientSecret,
@@ -54,10 +46,10 @@ app.post("/proxy-api", async (req, res) => {
   //console.log(clientId, clientSecret, script, stdin, language, versionIndex);
 
   res.json({
-    output: data?.output
+    output: data?.output,
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on ${PORT}`);
-});
+module.exports = {
+  ProxyRouter: router,
+};

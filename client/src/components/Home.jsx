@@ -2,7 +2,8 @@ import Editor from "./Editor";
 import '../styles/Home.css';
 import ButtonAppBar from "./AppBar";
 import Settings from "./Settings";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import {io} from "socket.io-client";
 
 const Home = () => {
   const [theme, setTheme] = useState('monokai');
@@ -11,6 +12,12 @@ const Home = () => {
   const [code, setCode] = useState('');
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
+
+  useEffect(() => {
+
+    const socket = io(import.meta.env.VITE_SERVER_URL);
+
+  }, []);
 
   return (
     <div className="home-container">
