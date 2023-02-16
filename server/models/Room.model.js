@@ -1,15 +1,18 @@
 const mongoose = require("mongoose");
-const  { Schema } = mongoose;
+const {Schema} = mongoose;
 
 const RoomSchema = new Schema({
-    id: {
-        type: String,
-        required: true
-    },
+  id: {
+    type: String,
+    required: true,
+  },
 
-    roomCode : String
+  roomCode: {
+    type: String,
+    default: "",
+  },
 });
 
 module.exports = {
-    RoomModel : mongoose.model("Room", RoomSchema)
-}
+  RoomModel: mongoose.model("Room", RoomSchema),
+};
