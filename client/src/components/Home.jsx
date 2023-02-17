@@ -48,6 +48,7 @@ const Home = () => {
   }, []);
 
   const onEditorChange = (newValue) => {
+    setCode(newValue);
     socket.emit("code-changed", {
       code: newValue,
       room: id
@@ -55,6 +56,7 @@ const Home = () => {
   }
 
   const onInputChange = (newValue) => {
+    setInput(newValue);
     socket.emit("input-changed", {
       code: newValue,
       room: id
@@ -62,6 +64,7 @@ const Home = () => {
   };
 
   const onOutputChange = (newValue) => {
+    setOutput(newValue);
     socket.emit("output-changed", {
       code: newValue,
       room: id,

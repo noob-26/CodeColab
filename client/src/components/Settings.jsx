@@ -28,7 +28,8 @@ const Settings = ({
   const [message, setMessage] = useState("");
   const socket = useContext(socketContext);
   const {id} = useParams();
-  const [buttontext, setButtontext] = useState("Copy Button ID");
+  const [buttontext, setButtontext] = useState("Copy Room ID");
+  const [savebuttontext, setsaveButtontext] = useState("Save Code");
 
   const displaySnackbar = (open, status, message) => {
     setOpen(open);
@@ -104,9 +105,13 @@ const Settings = ({
           variant="contained"
           onClick={() => {
             saveCode(code, id);
+            setsaveButtontext("Saved");
+            setTimeout(() => {
+              setsaveButtontext("Save Code");
+            }, 500);
           }}
         >
-          Save Code
+          {savebuttontext}
         </Button>
         <Button
           variant="contained"
