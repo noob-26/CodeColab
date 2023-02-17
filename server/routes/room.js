@@ -25,6 +25,35 @@ router.post("/create", (req, res) => {
     });
 });
 
+router.post("/savecode", async (req, res) => {
+  const {code, id} = req.body;
+
+  try {
+    const room = await RoomModel.findOne({id});
+    if (!room) {
+      res.status(400).json({
+        message: "Invalid room Code",
+      });
+      return;
+    }
+
+    await RoomModel.findOneAndUpdate(
+      {id},
+      {
+        roomCode: code,
+      }
+    );
+
+    res.status(200).json({
+      message: "Code saved successfully",
+    });
+  } catch (err) {
+    res.status(400).json({
+      message: "Something went wrong! Please try again.",
+    });
+  }
+});
+
 router.get("/find/:id", async (req, res) => {
   const {id} = req.params;
   const room = await RoomModel.findOne({id});

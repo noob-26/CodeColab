@@ -7,7 +7,10 @@ import editorFonts from "../utils/editorfont";
 import submitCode from "../utils/submitCode";
 import {useQuery} from "react-query";
 import Snackbar from "../components/Snackbar";
-import {useState} from "react";
+import {useState, useContext} from "react";
+import { useParams } from "react-router-dom";
+import socketContext from "../utils/socketContext";
+import saveCode from "../utils/saveCode";
 
 const Settings = ({
   theme,
@@ -23,6 +26,8 @@ const Settings = ({
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState("");
   const [message, setMessage] = useState("");
+  const socket = useContext(socketContext);
+  const {id} = useParams();
 
   const displaySnackbar = (open, status, message) => {
     setOpen(open);
@@ -51,6 +56,10 @@ const Settings = ({
         let val = "";
         val += data.data.output;
         setOutput(val);
+         socket.emit("output-changed", {
+           code: val,
+           room: id,
+         });
       },
     }
   );
@@ -90,7 +99,9 @@ const Settings = ({
           setValue={setFontSize}
         />
 
-        <Button variant="contained">Save Code</Button>
+        <Button variant="contained" onClick={() => {
+          saveCode(code, id);
+        }}>Save Code</Button>
         <Button
           variant="contained"
           onClick={() => {

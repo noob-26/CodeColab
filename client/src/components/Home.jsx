@@ -22,13 +22,27 @@ const Home = () => {
     socket.emit("send-room", id);
 
     socket.on("send-current-code", (code) => {
-      //console.log('code', code);
       setCode(code);
     });
 
+    socket.on("send-current-input", (code) => {
+      setInput(code);
+    });
+
+    socket.on("send-current-output", (code) => {
+      setOutput(code);
+    });
+
     socket.on("code-receive", (code) => {
-      //console.log(code);
       setCode(code);
+    });
+
+    socket.on("input-receive", (code) => {
+      setInput(code);
+    });
+
+    socket.on("output-receive", (code) => {
+      setOutput(code);
     });
 
   }, []);
@@ -39,6 +53,20 @@ const Home = () => {
       room: id
     });
   }
+
+  const onInputChange = (newValue) => {
+    socket.emit("input-changed", {
+      code: newValue,
+      room: id
+    })
+  };
+
+  const onOutputChange = (newValue) => {
+    socket.emit("output-changed", {
+      code: newValue,
+      room: id,
+    });
+  };
 
   return (
     <div className="home-container">
@@ -75,7 +103,7 @@ const Home = () => {
           <div className="code-input">
             <Editor
               onChange={(newvalue) => {
-                onEditorChange(newvalue);
+                onInputChange(newvalue);
               }}
               code={input}
               setCode={setInput}
@@ -90,7 +118,7 @@ const Home = () => {
           <div className="code-output">
             <Editor
               onChange={(newvalue) => {
-                onEditorChange(newvalue);
+                onOutputChange(newvalue);
               }}
               code={output}
               setCode={setOutput}
