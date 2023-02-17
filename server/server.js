@@ -76,17 +76,17 @@ try {
     socket.on("code-changed", ({code, room}) => {
       //console.log(code, room);
       tempCode[room].code = code;
-      io.to(room).emit("code-receive", code);
+      socket.broadcast.to(room).emit("code-receive", code);
     });
 
     socket.on("input-changed", ({code, room}) => {
       tempCode[room].input = code;
-      io.to(room).emit("input-receive", code);
+      socket.broadcast.to(room).emit("input-receive", code);
     });
 
     socket.on("output-changed", ({code, room}) => {
       tempCode[room].output = code;
-      io.to(room).emit("output-receive", code);
+      socket.broadcast.to(room).emit("output-receive", code);
     });
 
     socket.on("disconnect", () => {
