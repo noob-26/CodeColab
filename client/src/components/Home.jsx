@@ -3,7 +3,9 @@ import '../styles/Home.css';
 import ButtonAppBar from "./AppBar";
 import Settings from "./Settings";
 import { useState, useEffect } from 'react';
-import {io} from "socket.io-client";
+import {useParams } from 'react-router-dom';
+import { useContext } from "react";
+import socketContext from "../utils/socketContext";
 
 const Home = () => {
   const [theme, setTheme] = useState('monokai');
@@ -12,12 +14,31 @@ const Home = () => {
   const [code, setCode] = useState('');
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
+  const params = useParams();
+  const socket = useContext(socketContext);
+  const {id} = params;
 
   useEffect(() => {
+    socket.emit("send-room", id);
 
-    const socket = io(import.meta.env.VITE_SERVER_URL);
+    socket.on("send-current-code", (code) => {
+      //console.log('code', code);
+      setCode(code);
+    });
+
+    socket.on("code-receive", (code) => {
+      //console.log(code);
+      setCode(code);
+    });
 
   }, []);
+
+  const onEditorChange = (newValue) => {
+    socket.emit("code-changed", {
+      code: newValue,
+      room: id
+    });
+  }
 
   return (
     <div className="home-container">
@@ -37,6 +58,9 @@ const Home = () => {
       <div className="editor-container">
         <div className="code-editor">
           <Editor
+            onChange={(newvalue) => {
+              onEditorChange(newvalue);
+            }}
             code={code}
             setCode={setCode}
             height="80vh"
@@ -50,6 +74,9 @@ const Home = () => {
         <div className="code-input-output">
           <div className="code-input">
             <Editor
+              onChange={(newvalue) => {
+                onEditorChange(newvalue);
+              }}
               code={input}
               setCode={setInput}
               height="40vh"
@@ -62,13 +89,16 @@ const Home = () => {
 
           <div className="code-output">
             <Editor
+              onChange={(newvalue) => {
+                onEditorChange(newvalue);
+              }}
               code={output}
               setCode={setOutput}
               height="40vh"
               theme={theme}
               language={"markdown"}
               fontSize={fontSize}
-              placeholder={"Put your output here"}
+              placeholder={"Your output appears here"}
             />
           </div>
         </div>

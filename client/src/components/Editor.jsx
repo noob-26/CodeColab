@@ -25,8 +25,8 @@ import "ace-builds/src-noconflict/snippets/html";
 import "ace-builds/src-noconflict/snippets/css";
 import "ace-builds/src-noconflict/snippets/markdown";
 
-import "ace-builds/src-noconflict/mode-html"
-import "ace-builds/src-noconflict/mode-c_cpp"
+import "ace-builds/src-noconflict/mode-html";
+import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-javascript";
@@ -36,11 +36,16 @@ import "ace-builds/src-noconflict/mode-html";
 import "ace-builds/src-noconflict/mode-css";
 import "ace-builds/src-noconflict/mode-markdown";
 
-const Editor = ({height, theme, language, fontSize, code, setCode, placeholder}) => {
-  function onChange(newValue) {
-    setCode(newValue);
-  }
-
+const Editor = ({
+  height,
+  theme,
+  language,
+  fontSize,
+  code,
+  setCode,
+  placeholder,
+  onChange,
+}) => {
   return (
     <div className="home-layout">
       <AceEditor
@@ -48,7 +53,13 @@ const Editor = ({height, theme, language, fontSize, code, setCode, placeholder})
         height={height}
         value={code}
         placeholder={placeholder}
-        mode={(language == 'c' || language == 'cpp17') ? 'c_cpp' : (language == "python3") ? "python" : language}
+        mode={
+          language == "c" || language == "cpp17"
+            ? "c_cpp"
+            : language == "python3"
+            ? "python"
+            : language
+        }
         theme={theme}
         name="Editor"
         onChange={onChange}

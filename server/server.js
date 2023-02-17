@@ -37,11 +37,44 @@ server.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
 })
 
-/* Socket code */
+/* Temporary code storage */
+const tempCode = {}; // stores temp codes like {room : { clients : num, code : '' }};
+const clientToRoom = {}; // stores the room of a client
 
+/* Socket code */
 io.on("connection", (socket) => {
-  console.log(`${socket.id} connected to server successfully`);
+  socket.on("send-room", (id) => {
+    socket.join(id);
+    
+    clientToRoom[socket.id] = id;
+
+    if(!(id in tempCode)){
+      tempCode[id] = {
+        clients : 1,
+        code: ''
+      }
+    }else{
+      tempCode[id].clients++;
+    }
+
+    io.to(socket.id).emit("send-current-code", tempCode[id].code);
+  });
+
+  socket.on("code-changed", ({code, room}) => {
+    //console.log(code, room);
+    tempCode[room].code = code;
+    io.to(room).emit("code-receive", code);
+  })
+
   socket.on("disconnect", () => {
+    const room = clientToRoom[socket.id];
+    tempCode[room].clients--;
+
+    delete clientToRoom[socket.id];
+    if(tempCode[room].clients == 0){
+      delete tempCode[room];
+    }
+
     console.log("disconnected");
   });
 });
