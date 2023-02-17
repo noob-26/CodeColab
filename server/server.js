@@ -45,59 +45,66 @@ const tempCode = {}; // stores temp codes like {room : { clients : num, code : '
 const clientToRoom = {}; // stores the room of a client
 
 /* Socket code */
-io.on("connection", (socket) => {
-  socket.on("send-room", async (id) => {
-    socket.join(id);
 
-    clientToRoom[socket.id] = id;
+try {
+  io.on("connection", (socket) => {
+    socket.on("send-room", async (id) => {
+      socket.join(id);
 
-    if (!(id in tempCode)) {
-      tempCode[id] = {
-        clients: 1,
-        code: "",
-        input: "",
-        output: "",
-      };
+      clientToRoom[socket.id] = id;
 
-      const room = await RoomModel.findOne({id});
-      const {roomCode} = room;
-      tempCode[id].code = roomCode;
+      if (!(id in tempCode)) {
+        tempCode[id] = {
+          clients: 1,
+          code: "",
+          input: "",
+          output: "",
+        };
 
-    } else {
-      tempCode[id].clients++;
-    }
+        const room = await RoomModel.findOne({id});
+        const {roomCode} = room;
+        tempCode[id].code = roomCode;
+      } else {
+        tempCode[id].clients++;
+      }
 
-    io.to(socket.id).emit("send-current-code", tempCode[id].code);
-    io.to(socket.id).emit("send-current-input", tempCode[id].input);
-    io.to(socket.id).emit("send-current-output", tempCode[id].output);
+      io.to(socket.id).emit("send-current-code", tempCode[id].code);
+      io.to(socket.id).emit("send-current-input", tempCode[id].input);
+      io.to(socket.id).emit("send-current-output", tempCode[id].output);
+    });
 
+    socket.on("code-changed", ({code, room}) => {
+      //console.log(code, room);
+      tempCode[room].code = code;
+      io.to(room).emit("code-receive", code);
+    });
+
+    socket.on("input-changed", ({code, room}) => {
+      tempCode[room].input = code;
+      io.to(room).emit("input-receive", code);
+    });
+
+    socket.on("output-changed", ({code, room}) => {
+      tempCode[room].output = code;
+      io.to(room).emit("output-receive", code);
+    });
+
+    socket.on("disconnect", () => {
+      try {
+        const room = clientToRoom[socket.id];
+        tempCode[room].clients--;
+
+        delete clientToRoom[socket.id];
+        if (tempCode[room].clients == 0) {
+          delete tempCode[room];
+        }
+
+        console.log("disconnected");
+      } catch (err) {
+        console.log("Some error occured");
+      }
+    });
   });
-
-  socket.on("code-changed", ({code, room}) => {
-    //console.log(code, room);
-    tempCode[room].code = code;
-    io.to(room).emit("code-receive", code);
-  });
-
-  socket.on("input-changed", ({code, room}) => {
-    tempCode[room].input = code;
-    io.to(room).emit("input-receive", code);
-  });
-
-  socket.on("output-changed", ({code, room}) => {
-    tempCode[room].output = code;
-    io.to(room).emit("output-receive", code);
-  });
-
-  socket.on("disconnect", () => {
-    const room = clientToRoom[socket.id];
-    tempCode[room].clients--;
-
-    delete clientToRoom[socket.id];
-    if (tempCode[room].clients == 0) {
-      delete tempCode[room];
-    }
-
-    console.log("disconnected");
-  });
-});
+} catch (err) {
+  console.log("Some error occured in socket...");
+}
