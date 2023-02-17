@@ -9,9 +9,8 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import {useNavigate} from "react-router-dom";
 import createRoom from "../utils/createRoom";
-import joinRoom from "../utils/joinRoom";
 
-export default function WelcomePage() {
+export default function RoomCreate() {
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
   const navigate = useNavigate();
@@ -61,7 +60,7 @@ export default function WelcomePage() {
           }}
         >
           <Typography component="h1" variant="h5">
-            CodeColab
+            CodeTalk
           </Typography>
 
           <Box
@@ -77,46 +76,6 @@ export default function WelcomePage() {
           </Box>
 
           <Box component="form" noValidate sx={{mt: 1}}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              error={error}
-              helperText={error ? "Room id does not exist" : ""}
-              value={value}
-              onChange={(e) => {
-                setValue(e.target.value);
-                setError(false);
-              }}
-              id="roomid"
-              label="Enter Room ID"
-              name="roomid"
-              autoFocus
-            />
-            <Button
-              onClick={() => {
-                joinRoom(navigate, value, setError);
-              }}
-              fullWidth
-              variant="contained"
-              sx={{mt: 3, mb: 2}}
-            >
-              Join a Room
-            </Button>
-
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              alignItems={"center"}
-              justifyContent={"center"}
-            >
-              <p align={"center"}>
-                <Typography component="h1" variant="h5" fontWeight={"bold"}>
-                  OR
-                </Typography>
-              </p>
-            </Box>
-
             <Button
               onClick={() => {
                 createRoom(navigate);

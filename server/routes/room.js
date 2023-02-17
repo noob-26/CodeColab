@@ -4,7 +4,7 @@ const {RoomModel} = require("../models/Room.model");
 
 router.post("/create", (req, res) => {
   const {id, code} = req.body;
-  console.log(id, code);
+  //console.log(id, code);
 
   const newRoom = new RoomModel({
     id,
@@ -57,7 +57,7 @@ router.post("/savecode", async (req, res) => {
 router.get("/find/:id", async (req, res) => {
   const {id} = req.params;
   const room = await RoomModel.findOne({id});
-  console.log(room);
+  //console.log(room);
   try {
     if (room) {
       res.status(200).json({

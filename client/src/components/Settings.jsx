@@ -8,7 +8,7 @@ import submitCode from "../utils/submitCode";
 import {useQuery} from "react-query";
 import Snackbar from "../components/Snackbar";
 import {useState, useContext} from "react";
-import { useParams } from "react-router-dom";
+import {useParams, useLocation} from "react-router-dom";
 import socketContext from "../utils/socketContext";
 import saveCode from "../utils/saveCode";
 
@@ -28,6 +28,7 @@ const Settings = ({
   const [message, setMessage] = useState("");
   const socket = useContext(socketContext);
   const {id} = useParams();
+  const [buttontext, setButtontext] = useState("Copy Button ID");
 
   const displaySnackbar = (open, status, message) => {
     setOpen(open);
@@ -56,10 +57,10 @@ const Settings = ({
         let val = "";
         val += data.data.output;
         setOutput(val);
-         socket.emit("output-changed", {
-           code: val,
-           room: id,
-         });
+        socket.emit("output-changed", {
+          code: val,
+          room: id,
+        });
       },
     }
   );
@@ -99,16 +100,37 @@ const Settings = ({
           setValue={setFontSize}
         />
 
-        <Button variant="contained" onClick={() => {
-          saveCode(code, id);
-        }}>Save Code</Button>
         <Button
           variant="contained"
           onClick={() => {
+            saveCode(code, id);
+          }}
+        >
+          Save Code
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            if (!language) {
+              alert("Please select a language");
+              return;
+            }
             refetch();
           }}
         >
           Run Code
+        </Button>
+        <Button
+          variant="contained"
+          onClick={async () => {
+            await navigator.clipboard.writeText(id);
+            setButtontext("Copied");
+            setTimeout(() => {
+              setButtontext("Copy Room ID");
+            }, 500);
+          }}
+        >
+          {buttontext}
         </Button>
       </Stack>
     </>

@@ -8,10 +8,9 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import {useNavigate} from "react-router-dom";
-import createRoom from "../utils/createRoom";
 import joinRoom from "../utils/joinRoom";
 
-export default function WelcomePage() {
+export default function RoomJoin() {
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
   const navigate = useNavigate();
@@ -102,30 +101,6 @@ export default function WelcomePage() {
               sx={{mt: 3, mb: 2}}
             >
               Join a Room
-            </Button>
-
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              alignItems={"center"}
-              justifyContent={"center"}
-            >
-              <p align={"center"}>
-                <Typography component="h1" variant="h5" fontWeight={"bold"}>
-                  OR
-                </Typography>
-              </p>
-            </Box>
-
-            <Button
-              onClick={() => {
-                createRoom(navigate);
-              }}
-              fullWidth
-              variant="contained"
-              sx={{mt: 3, mb: 2}}
-            >
-              Create a Room
             </Button>
           </Box>
         </Box>
